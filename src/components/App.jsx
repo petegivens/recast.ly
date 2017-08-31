@@ -8,6 +8,25 @@ class App extends React.Component {
       videos: this.props.videos
     }
     this.handleClick = this.handleClick.bind(this);
+    this.callBack = this.callBack.bind(this);
+    this.searchChangeHandler = this.searchChangeHandler.bind(this);
+  }
+
+  componentDidMount(){
+    this.props.searchYouTube({max: 5, query: 'monopoly', key: window.YOUTUBE_API_KEY}, this.callBack)
+  }
+
+  callBack(data) {
+    this.setState({videos: data, currentVideo: data[0]});
+  }
+
+  searchChangeHandler(query) {
+    var options = {
+      max: 5,
+      q: query,
+      key: window.YOUTUBE_API_KEY
+    }
+      window.searchYouTube(options, this.callBack);
   }
 
   render() {
@@ -15,7 +34,7 @@ class App extends React.Component {
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <div><h5><em>search</em> view goes here</h5></div>
+            <Search searchChangeHandler={this.searchChangeHandler} />
           </div>
         </nav>
         <div className="row">
@@ -33,6 +52,7 @@ class App extends React.Component {
   handleClick(video) {
     this.setState({currentVideo: video});
   }
+
 }
 
 // In the ES6 spec, files are "modules" and do not share a top-level scope
